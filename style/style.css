@@ -1,0 +1,200 @@
+*{
+    box-sizing: border-box;
+}
+.clearfix{
+    clear: both;
+}
+.navbar{
+    border-top: 3px solid #FF5D0D;
+    max-height: 53px;
+    margin-bottom: 0;
+}
+.navbar-default .navbar-form{
+    margin-bottom: 0;
+    margin-right: 50px;
+}
+.navbar-form{
+    position: relative;
+    border:1px solid #DDD;
+    padding: 0;
+    width:25%;
+}
+.navbar-form .form-search{
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    padding: 0 30px;
+}
+.navbar-form input{
+    border:0;
+}
+.navbar-form button{
+    content: ' ';
+    width:40px !important;
+    opacity:0;
+    position: absolute;
+    left:0;
+    border-radius: 0;
+    background: #0095ff;
+    color:white;
+    box-shadow: inset 0 1px 0 #66bfff;
+    border-color: #07c;
+
+}
+.navbar-form span{
+    opacity: 1;
+    position: absolute;
+    right: 4%;
+    top: 25%;
+    font-size: 18px;
+}
+.navbar-my{
+    list-style: none;
+    margin-top: 15px;
+}
+.navbar-my li{
+    float:left;
+    margin-left: 10px;
+}
+.navbar-my li a{text-decoration: none;}
+.navbar-my .signup
+{
+    background: #0095ff;
+    box-shadow: inset 0 1px 0 #66bfff;
+    color:white !important;
+    padding: 6px;
+    margin-top: 10px;
+    border-radius: 3px;
+    font-size: 15px;
+    
+}
+/*start register view*/
+.register{
+    background: -moz-linear-gradient(left,#0b3ff5,#117CF3);
+    padding-top:2%;
+}
+.register .form {
+    padding:20px;
+}
+.register .form .form-group{
+       margin-bottom: 10px;
+}
+.register .form .form-group label{
+    width: 29%;
+    height: auto;
+    background: #ddd;
+    padding: 9.5px 7px 7px 17px;
+    transform: translate(-5px,0px);
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    color:#6B5E7F;
+    font-size: 12px;
+    font-weight: inherit
+}
+.register .form .form-group input{
+    width: 70%;
+    height: auto;
+    display: inline-block;
+    border-radius:0;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    
+}
+.register .form input[type='submit']{
+    background: none;
+    color: #FFF;
+    padding: 8px 35px;
+    font-weight: bolder;
+    border: 1px solid #FFFFFF;
+        border-right-color: rgb(255, 255, 255);
+        border-bottom-color: rgb(255, 255, 255);
+    border-bottom-color: seagreen;
+    border-right-color: seagreen;
+    transform: translate(-5px,0px);
+    border-radius:2px;
+}
+.register .about{
+    padding-top:20px;
+    color:azure;
+}
+.r-footer{
+    background: #0069D4;
+    color:#FFFFFF;
+    padding:15px 0px;
+}
+.r-footer label{
+    margin:0;
+}
+.r-footer label a{
+    color: #FFFFFF;
+    font-weight: bolder;
+}
+/*start questions page */
+.questions{
+    height: 1000px;
+}
+.questions .q_header{
+    border-bottom: 1px solid #DDD;
+}
+.questions .q_cats{
+    list-style: none;
+    display: inline-block;
+    margin-left: 25%;
+    margin-bottom: -1px;
+}
+.questions .q_cats li {
+    display: inline-block;
+    border:1px solid transparent;
+    padding:10px;
+}
+.questions .q_cats li:hover{
+    border:1px solid rgba(221, 221, 221, 0.3);
+    background: rgba(221, 221, 221, 0.2);
+}
+.questions .q_cats .active,
+.questions .q_cats .active:hover{
+    border:1px solid #DDD;
+    border-top: 2px solid #F48024;
+    border-bottom: 1px solid #FFFFFF;
+}
+.questions .q_body .question{
+    overflow: hidden;
+}
+.questions .q_body .question .q_stats{
+    width:25%;
+    cursor:pointer;
+    float: right;
+    min-height: 81.4px;
+    padding-top: 3%;
+}
+.questions .q_body .question .q_stats > div{
+    display: inline-block;
+    text-align: center;
+    padding: 0;
+}
+.questions .q_body .question .q_stats > div .mini_counts{
+    text-align: center;
+}
+.questions .q_body .question .q_sammary{
+    width: 75%;
+    float: right;
+}
+.questions .q_body .question .q_sammary .q_tags span{
+    background: #CEE0ED99;;
+    padding: 5px;
+    color: #4B6C9F;
+}
+.questions .q_body .question .q_sammary .title{
+    text-decoration: none;
+}
+.questions .q_body .question .q_sammary .q_started{
+    text-align: left;
+}
+
+
