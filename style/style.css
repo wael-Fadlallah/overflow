@@ -4,6 +4,13 @@
 .clearfix{
     clear: both;
 }
+.hr{
+    border-bottom: 1px solid #544C4C;
+}
+section{
+    padding-top:20px;
+    padding-bottom:20px;
+}
 .navbar{
     border-top: 3px solid #FF5D0D;
     max-height: 53px;
@@ -172,7 +179,7 @@
     float: right;
     min-height: 81.4px;
     padding-top: 3%;
-}
+} 
 .questions .q_body .question .q_stats > div{
     display: inline-block;
     text-align: center;
@@ -196,5 +203,43 @@
 .questions .q_body .question .q_sammary .q_started{
     text-align: left;
 }
-
-
+.questions .addQ {
+    border: 1px solid #E4E4E4;
+    padding: 5px 10px;
+    text-decoration: none;
+}
+.ask .box {
+    border:1px solid #DDD;
+    padding: 15px;
+}
+.ask .box span{
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    display: inline-block;
+    border-bottom: 1px solid #DDD;
+    margin-top: 0;
+}
+.ask .box span:last-of-type{border-bottom: 0;}
+/*start footer*/
+footer{
+    background: #080808;
+    padding: 20px 0;
+}
+footer ul{
+    list-style: none;
+}
+footer ul li {
+    padding: 5px;
+    color: azure;
+}
+footer ul .hr {
+    font-size: 18px;
+    font-weight: bolder;
+}
+footer ul li a{
+    font-weight: bold;
+}
+footer .rights{
+    text-align: center;
+    color: azure;
+}

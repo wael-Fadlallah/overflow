@@ -20,7 +20,7 @@
                    <div class="form-group">
                         <label>اسم المستخدم</label>
                         <input type="text" class="form-control" placeholder="W.fadlallah">
-                   </div>
+                   </div> 
                    <div class="form-group">
                         <label>عنوان الايميل</label>
                         <input type="text" class="form-control" placeholder="W.fadlallah@gmail.com">

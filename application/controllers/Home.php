@@ -6,6 +6,13 @@ class Home extends CI_Controller{
         $this->load->helper('form');
         $this->load->view('signup.php');
         $this->load->view('questions_tab.php');
+        $this->load->view('footer.php');       
+    }
+    public function Ask()
+    {
+        $this->load->view('header.php');
+        $this->load->view('ask.php');
+        
         $this->load->view('footer.php');
     }
 }

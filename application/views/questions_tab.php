@@ -9,7 +9,7 @@
                 <li>اسبوعيا</li>
                 <li>شهريا</li>
             </ul>
-            <a href='#'><button>اضف سوأل</button></a>
+            <a href='Ask' class="addQ">اضف سوأل</a>
         </div>
         <div class='q_body'>
             <div class='row'>
