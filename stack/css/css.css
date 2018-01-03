@@ -1,0 +1,26 @@
+.tag
+{
+   font-size: 13px;
+       background-color:lightgrey;
+font-weight: bold;
+    color: darkblue;
+    border: 2px;
+    cursor: pointer;.
+    border-radius: 10px;
+    
+}
+body
+{
+    margin: 10%;
+    font-size: 16px;
+}
+.bottom
+{
+ border: 2px solid transparent;
+  background: #3498DB;
+  color: #ffffff;
+  font-size: 16px;
+    height: 30px;
+    border-radius: 5px;
+ 
+}
