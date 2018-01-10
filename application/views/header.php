@@ -36,7 +36,7 @@
         <button type='submit' class='form-control'></button>
           <input type='text' class='form-search' placeholder='بحث ...'>
         <span class='glyphicon glyphicon-search' aria-hidden='true'></span>
-        
+
 <!--        <button type='submit' class='btn btn-default'>Submit</button>-->
       </form>
       <?php
@@ -72,8 +72,8 @@
                 ";
             }
         ?>
-               
+
 
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
-</nav> 
+</nav>

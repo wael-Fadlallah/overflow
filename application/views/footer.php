@@ -43,6 +43,7 @@
 <script src="<?php echo base_url('js/pulgin.js');?>"></script>
 <!--post editor -->
 <script>
+	//$("#my_answer").show();
     //  comments ajax function
     $("#insert_comment").click(function(){
         var comment = $("#lp-message").html();
@@ -51,15 +52,23 @@
 //        console.log(q_id);
         var request = $.ajax({
             url:"<?php echo base_url('/Home/insert_comment') ?>",
+			beforeSend:function(xhr){
+				$("#insert_comment").addClass("btn-loading");
+				$(".form-group #loading").addClass("comment_loading");
+			},
             method:"POST",
             data:{post:comment,id:q_id}
         });
         request.done(function(msg){
-//            $("#my_answer")
-            alert("Done");
-            
+            $("#my_answer").show();
+			var my_comment = $("#comment");
+			my_comment.html(msg);
+			//$("#insert_comment").removeClass("btn-loading");
+			$("#comment_box").delay(100000).hide();
+//            alert("Done");
+
         })
-    });  
+    });
 </script>
 <script>
     tinymce.init({
@@ -93,7 +102,7 @@
             })
         editor.on("keyup", function(){
             $('#lp-message').html(tinymce.activeEditor.getContent());
-        })   
+        })
         },
         default_link_target:'_blank',
         target_list:false,
@@ -103,28 +112,50 @@
         file_browser_callback_types:'image',
         branding:false,
         statusbar:false,
-        
+
       });
-    
+
 </script>
 <!--disable Enter submit on forms for tags functionlity-->
 <script>
     $('form').on('keyup keypress', function(e) {
               var keyCode = e.keyCode || e.which;
-              if (keyCode === 13) { 
+              if (keyCode === 13) {
                 e.preventDefault();
                 return false;
               }
         });
-    //    tags input 
+    //    tags input
     $('.tags').tokenize2({
         dataSource: "<?php   echo base_url('/Home/search_tags');    ?>",
         tokensAllowCustom:true,
         delimiter: [' ']
     });
-    $('#topic').upvote();
+    var callback = function(data){
+      var vote = $.ajax({
+        url:"<?php echo base_url('/Home/votes_query') ; ?>",
+        method:"POST",
+        data:{id: data.id, up: data.upvoted, down: data.downvoted, star: data.starred}
+      });
+      console.log("up is :"+data.upvoted);
+      console.log("down is :"+data.downvoted);
+      vote.done(function(msg){
+        alert('its works');
+        // console.log("up is :"+msg.upvote);
+        // console.log("down is :"+msg.downvote);
+      })
+      vote.fail(function(jx,msg){
+        alert("i'm bad as fuck in javascript"+msg);
+      });
+    };
+    $('#topic').upvote({
+      upvoted:<?php echo $upvoted ; ?>,
+      downvoted:<?php echo $downvoted ; ?>,
+      starred:<?php echo $star ; ?>,
+      count:<?php echo $votes_count ; ?>,
+      callback:callback});
+    $('#comment').upvote({count:5});
 </script>
-
 
 </body>
 </html>

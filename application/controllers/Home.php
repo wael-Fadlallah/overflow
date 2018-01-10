@@ -7,7 +7,7 @@ class Home extends CI_Controller
 //        print_r($this->session->all_userdata());
         if($this->session->has_userdata('id'))
         {
-            $this->load->model('User_model');          
+            $this->load->model('User_model');
             if(!$this->User_model->check_account($this->session->userdata('id')))
             {
                 redirect('/Welcome');
@@ -19,10 +19,9 @@ class Home extends CI_Controller
     public function index()
     {
         $this->load->helper('form');
-        $this->load->model('User_model');
         $this->load->library('form_validation');
         $data = array(
-            'id'    => $this->session->userdata('id'),
+            'user_id'    => $this->session->userdata('id'),
             'name'  => $this->session->userdata('name'),
             'pic'   => $this->session->userdata('pic')
         );
@@ -33,7 +32,7 @@ class Home extends CI_Controller
         }else{
             $this->load->view('questions_tab.php');
         }
-        $this->load->view('footer.php');       
+        $this->load->view('footer.php');
     }
     public function tags()
     {
@@ -56,14 +55,13 @@ class Home extends CI_Controller
         $this->form_validation->set_rules('tags','Tags','trim');
         if($this->form_validation->run())
         {
-            $this->load->model('User_model');
             if($this->User_model->ask($data['id']))
             {
                 echo 'Done';
             }
         }
         $this->load->view('ask.php');
-        
+
         $this->load->view('footer.php');
     }
     public function login()
@@ -77,7 +75,7 @@ class Home extends CI_Controller
             echo 'done';
         }
         $this->load->view('login.php');
-        $this->load->view('footer.php');    
+        $this->load->view('footer.php');
     }
     public function signup()
     {
@@ -88,7 +86,6 @@ class Home extends CI_Controller
         $this->form_validation->set_rules('password','Passwrod','trim|required');
         if($this->form_validation->run())
         {
-            $this->load->model('User_model');
             if($this->User_model->Create_user() == true)
             {
                 header('location:complate_account');
@@ -103,7 +100,6 @@ class Home extends CI_Controller
     {
         $this->load->library('form_validation');
         $this->load->view('header.php');
-        $this->load->model('User_model');
         $data = $this->session->all_userdata();
         $data['profile'] = $this->User_model->check_profile($data['id']);
         $this->form_validation->set_rules('phone','Phone','trim|min_length[10]');
@@ -129,7 +125,6 @@ class Home extends CI_Controller
             $this->complate_account($error);
 //            $this->load->view('complate_account.php',$error);
         }else{
-            $this->load->model('User_model');
             $image_name = $this->upload->data('file_name');
             $user_id = $this->session->userdata('id');
             if($this->User_model->insert_img($image_name,$user_id))
@@ -146,7 +141,7 @@ class Home extends CI_Controller
     }
     public function search_tags()
     {
-        $tag = $this->input->get_post('search'); 
+        $tag = $this->input->get_post('search');
         $this->load->model("User_model");
         if($data = $this->User_model->check_tag($tag))
         {
@@ -157,17 +152,28 @@ class Home extends CI_Controller
     }
     public function display_question()
     {
-        $this->load->view('header.php');
+        // $this->User_model->count_votes(28,-1);
+        $data = array(
+            'id'    => $this->session->userdata('id'),
+            'name'  => $this->session->userdata('name'),
+            'pic'   => $this->session->userdata('pic')
+         );
+        $this->load->view('header.php',$data);
         if($data = $this->User_model->get_question($this->input->get('id')))
         {
             echo "<pre>";
-//            var_dump($data);
+            // print_r($data);
 //            print($this->session->userdata('id'));
-            
+            // $data['votes'] = $this->get_votes($this->input->get('id'));
+            // print_r($data);
             echo "</pre>";
              $this->load->view('view_question.php',$data);
         }
-        $this->load->view('footer.php');
+        if($vote_data = $this->User_model->get_votes($this->input->get('id')))
+        {
+          // var_dump($vote_data);
+          $this->load->view('footer.php',$vote_data);
+        }
     }
     public function insert_comment()
     {
@@ -178,6 +184,20 @@ class Home extends CI_Controller
             header("content-type: text/json");
             echo json_encode($request);
         }
+    }
+    public function votes_query()
+
+    {
+      $id   = $this->input->post('id');
+      $up   = $this->input->post('up');
+      $down = $this->input->post('down');
+      $star = $this->input->post('star');
+      var_dump($up);
+      if($count = $this->User_model->votes_query($id,$up,$down,$star))
+      {
+        header("content-type:text/json");
+        echo json_encode($count) ;
+      }
     }
 }
 ?>

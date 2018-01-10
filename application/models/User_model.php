@@ -23,7 +23,7 @@ class User_model extends CI_Model
             $id = $this->db->insert_id();
             $user_data = array(
                  'name' => $name ,
-                 'id'   => $id    
+                 'id'   => $id
             );
             $this->session->set_userdata($user_data);
             return true;
@@ -49,7 +49,7 @@ class User_model extends CI_Model
         $data = array(
             'phone' => $phone,
             'age'   => $age,
-            'career'=> $career 
+            'career'=> $career
         );
         $this->db->where('id',$id);
         $this->db->update('users',$data);
@@ -136,7 +136,7 @@ class User_model extends CI_Model
 //        echo "<hr>";
 //        var_dump($data);
 //        echo '</pre>';
-        $data['comments'] = $comment_data; 
+        $data['comments'] = $comment_data;
         return $data ;
     }
     public function get_tags($tags)
@@ -164,6 +164,94 @@ class User_model extends CI_Model
         {
             return $comment ;
         }
+    }
+    public function votes_query($id,$up,$down,$star)
+    {
+      $user = $this->session->userdata('id');
+      if($up == true){$up=1;$down=0;$count=1;}else {$up=0;$down=1;}
+      if($down == true){$up=0;$down=1;$count=-1;}else {$up=1;$down=0;}
+      if($star== true){$star = 1;}
+      $check_votes = $this->db->query("SELECT * FROM votes WHERE user_id = '$user' AND question_id = '$id' ");
+      if($result = $check_votes->row())
+      {
+        $data = array(
+          "user_id"     => $user,
+          "question_id" => $id,
+          "upvote"      => $up,
+          "downvote"    => $down,
+          "star"        =>  $star
+        );
+        $this->db->where('id',$result->id);
+        // var_dump($data);
+        if($this->db->update('votes',$data))
+        {
+          $this->count_votes($id,$count);
+          return $data ;
+        }
+      }else{
+        $data = array(
+          "user_id"     => $user,
+          "question_id" => $id,
+          "upvote"      => $up,
+          "downvote"    => $down,
+          "star"        =>  $star
+        );
+        if($this->db->insert('votes',$data))
+        {
+          $this->count_votes($id,$count);
+          return $data ;
+        }
+      }
+    }
+    public function count_votes($q_id,$count=false)
+    {
+      if($count == false)
+      {
+        $query = $this->db->query("SELECT votes FROM questions WHERE id = '$q_id'");
+        $row = $query->row();
+        return $row->votes;
+      }else {
+        $query = $this->db->query("SELECT votes FROM questions WHERE id = '$q_id'");
+        $row_increment = $query->row();
+        if($row_increment != null )
+        {
+          // var_dump($row);
+          // echo 'orignal is '.$row_increment->votes ;
+          $vote = $row_increment->votes + $count;
+          // echo '<br>vote is '.$vote ;
+          // $this->db->query("UPDATE `questions` SET `votes` = `votes` WHERE id = '$q_id' ");
+          $this->db->set('votes',$vote,FALSE);
+          $this->db->where('id',$q_id);
+          $this->db->update('questions');
+          // echo 'count is '.$count;
+          // echo '<br> votes is '.$row->votes;
+          // echo '<br> still is '.$vote;
+          return $vote ;
+        }
+      }
+      //
+    }
+    public function get_votes($q_id)
+    {
+      $user = $this->session->userdata('id');
+      $check_votes = $this->db->query("SELECT * FROM votes WHERE user_id = '$user' AND question_id = '$q_id' ");
+      if($row = $check_votes->row())
+      {
+        $data = array(
+          'votes_count' =>$this->count_votes($q_id) ,
+          'upvoted'     =>$row->upvote,
+          'downvoted'    =>$row->downvote,
+          'star'        =>$row->star
+        );
+      }else{
+        $data = array(
+          'votes_count' =>$this->count_votes($q_id) ,
+          'upvoted'     =>0,
+          'downvoted'    =>0,
+          'star'        =>0
+        );
+      }
+      return $data ;
     }
 }
 ?>
