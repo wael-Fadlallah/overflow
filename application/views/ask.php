@@ -33,7 +33,7 @@
 //</section>
 //        ";
 //    }else{
-//        
+//
 //    }
 ?>
 <!--
@@ -76,7 +76,7 @@
                    <div class="form-group">
                        <span class="h2">الاقسام : </span>
 <!--                       <input type="text" class="tags form-control" >-->
-                          <select class="tags" name="tags[]" multiple>
+                          <select class="tags_input" name="tags[]" multiple>
                         </select>
                    </div>
                    <div class="form-group">
@@ -87,5 +87,5 @@
                 4
             </div>
         </div>
-    </div> 
+    </div>
 </section>

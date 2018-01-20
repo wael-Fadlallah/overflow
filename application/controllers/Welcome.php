@@ -1,6 +1,10 @@
 <?php
 class Welcome extends CI_Controller
 {
+  public function __construct(){
+    parent::__construct();
+    $this->load->model("User_model");
+  }
     public function index()
     {
 //        $this->session->sess_destroy();
@@ -8,8 +12,37 @@ class Welcome extends CI_Controller
         $this->load->library('form_validation');
         $this->load->view('header.php');
         $this->load->view('cover.php');
-        $this->load->view('questions_tab.php');
-        $this->load->view('footer.php');       
+        if($questions = $this->User_model->get_questions())
+        {
+            $questions['vister'] = true ;
+            $this->load->view('questions_tab.php',$questions);
+        }else{
+            $this->load->view('questions_tab.php');
+        }
+        $this->load->view('footer.php');
+    }
+    public function display_question()
+    {
+        $this->load->view('header.php');
+        if($data = $this->User_model->get_question($this->input->get('id')))
+        {
+           // echo "<pre>";
+            // print_r($data);
+//            print($this->session->userdata('id'));
+            // $data['votes'] = $this->get_votes($this->input->get('id'));
+            // print_r($data);
+            // echo "</pre>";
+             $data['vister'] = true ;
+             $this->load->view('view_question.php',$data);
+        }
+        if($vote_data = $this->User_model->get_votes_vister($this->input->get('id')))
+        {
+          $vote_data['vister'] = true ;
+          // echo "<pre>";
+          // var_dump($vote_data);
+          // echo "</pre>";
+          $this->load->view('footer.php',$vote_data);
+        }
     }
     public function login()
     {
@@ -27,7 +60,7 @@ class Welcome extends CI_Controller
             }
         }
         $this->load->view('login.php');
-        $this->load->view('footer.php');    
+        $this->load->view('footer.php');
     }
     public function signup()
     {
@@ -89,6 +122,6 @@ class Welcome extends CI_Controller
             }
     //        $this->complate_account();
     }
-        
+
 }
 ?>

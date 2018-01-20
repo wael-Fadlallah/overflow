@@ -1,8 +1,8 @@
 <?php
 	$commentd = false;
-    echo '<pre>';
-//    print_r($comments);
-    echo '</pre>';
+   //  echo '<pre>';
+   // print_r($comments_voted);
+   //  echo '</pre>';
 ?>
    <section class="view_question">
     <div class="container">
@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="about-asker">
+                <!-- <div class="about-asker">
                     <div class="box">
                        <?php   echo" <img src=' ".base_url('images/profile/profile.png')."'>";    ?>
                        <span class='h4'><?php   echo $name ;   ?></span>
@@ -55,7 +55,7 @@
                            <span>اخر ظهور  : اليوم </span>
                        </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <hr class="hr">
@@ -74,7 +74,7 @@
                     <div class='row'>
                     <div class='col-md-8 answer' style='display:flex;'>
                         <div class='col-md-2'>
-                            <div id='comment' data-id=".$comment['id']." class='upvote'>
+                            <div id='comment_".$comment['id']."' data-id=".$comment['id']." class='upvote'>
                                 <a class='upvote'></a>
                                 <span class='count'>0</span>
                                 <a class='downvote'></a>
@@ -115,21 +115,22 @@
 //			var_dump($commentd);
 			if(!$commentd)
 			{
+				if(!isset($vister))
+				{
 				echo "
 						<div class='row' id='comment_box'>
-							<div class='col-md-8'>
-							   <span class='h3' style='display:block;'>  اجب على السوال :</span>
-							   <div class='col-md-10'>
-								    <div class='form-group'>
-								    	<div id='loading' class=''></div>
-								        <textarea name='post' id='text'></textarea>
-								        <div id='lp-message'></div>
-								        <input type='submit' value='نشر السوال' id='insert_comment'>
-								    </div>
-								</div>
-							</div>
+								   <span class='h3' style='display:block;'>  اجب على السوال :</span>
+								   <div class='col-md-10'>
+										    <div class='form-group'>
+										    			<div id='loading' class=''></div>
+											        <textarea name='post' id='text'></textarea>
+											        <div id='lp-message'></div>
+											        <input type='submit' value='نشر السوال' id='insert_comment'>
+											   </div>
+									 </div>
 						</div>
 				";
+				}
 			}
 		?>
     </div>

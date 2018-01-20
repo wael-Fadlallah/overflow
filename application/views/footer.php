@@ -116,6 +116,15 @@
       });
 
 </script>
+<script>
+$('.tags_input').tokenize2({
+    dataSource: "<?php   echo base_url('/Home/search_tags');    ?>",
+    tokensAllowCustom:true,
+    delimiter: [' ']
+});
+</script>
+
+</script>
 <!--disable Enter submit on forms for tags functionlity-->
 <script>
     $('form').on('keyup keypress', function(e) {
@@ -126,36 +135,127 @@
               }
         });
     //    tags input
-    $('.tags').tokenize2({
-        dataSource: "<?php   echo base_url('/Home/search_tags');    ?>",
-        tokensAllowCustom:true,
-        delimiter: [' ']
-    });
     var callback = function(data){
       var vote = $.ajax({
         url:"<?php echo base_url('/Home/votes_query') ; ?>",
         method:"POST",
         data:{id: data.id, up: data.upvoted, down: data.downvoted, star: data.starred}
       });
-      console.log("up is :"+data.upvoted);
-      console.log("down is :"+data.downvoted);
       vote.done(function(msg){
         alert('its works');
-        // console.log("up is :"+msg.upvote);
-        // console.log("down is :"+msg.downvote);
       })
       vote.fail(function(jx,msg){
         alert("i'm bad as fuck in javascript"+msg);
       });
     };
-    $('#topic').upvote({
-      upvoted:<?php echo $upvoted ; ?>,
-      downvoted:<?php echo $downvoted ; ?>,
-      starred:<?php echo $star ; ?>,
-      count:<?php echo $votes_count ; ?>,
-      callback:callback});
-    $('#comment').upvote({count:5});
+    <?php
+        if(!isset($vister))
+        {
+            echo"
+            $('#topic').upvote({
+              upvoted:".$question_vote['upvoted'].",
+              downvoted:".$question_vote['downvoted'] .",
+              starred:". $question_vote['star'] .",
+              count:". $question_vote['votes_count'].",
+              callback:callback});
+            ";
+        }else{
+          echo"
+          $('#topic').upvote({
+            upvoted:0,
+            downvoted:0,
+            starred: 0,
+            count:". $question_vote."
+          });
+          ";
+        }
+    ?>
+      var comment_callback = function(data){
+        var question_id = $("#question_id").val()
+        var requ = $.ajax({
+          url:"<?php echo base_url('/Home/votes_query') ; ?>",
+          method:"POST",
+          data:{id:data.id, q_id:question_id ,up:data.upvoted, down:data.downvoted , star:data.starred}
+        })
+        requ.done(function(msg){
+          alert('comment works');
+        });
+        requ.fail(function(jx,err){
+          alert('error'+err)
+        });
+      };
+      <?php
+      if(!isset($vister))
+      {
+      if(isset($user_vote) and $user_vote != false)
+      {
+            // in case there is a votes
+              echo "
+              $('#comment_".$user_vote->comment_id."').upvote({
+                upvoted:".$user_vote->upvote.",
+                downvoted:".$user_vote->downvote.",
+                starred:".$user_vote->star.",
+                count:".$user_vote->votes.",
+                callback:comment_callback
+              }); ";
+        }
+        if (isset($comments_voted) and $comments_voted != false)
+        {
+            foreach($comments_voted as $comment)
+            {
+              // echo $comment_id->id;
+              echo "
+              $('#comment_".$comment->id."').upvote({
+                upvoted:$comment->upvote,
+                downvoted:$comment->downvote,
+                starred:$comment->star,
+                count:".$comment->votes.",
+                callback:comment_callback
+              }); ";
+            }
+        }
+        if (isset($unvoted_comments_id) and $unvoted_comments_id != false)
+        {
+          foreach($unvoted_comments_id as $comment_id)
+          {
+            echo "
+              $('#comment_".$comment_id->id."').upvote({
+                upvoted:0,
+                downvoted:0,
+                starred:0,
+                count:0,
+                callback:comment_callback
+              })
+            ";
+          }
+        }
+      }else{
+        if (isset($comments_voted) and $comments_voted != false)
+        {
+          // var_dump($comments_voted);
+            foreach($comments_voted as $comment)
+            {
+              // echo $comment_id->id;
+              echo "
+              $('#comment_".$comment->id."').upvote({
+                upvoted:0,
+                downvoted:0,
+                starred:0,
+                count:".$comment->votes."
+              }); ";
+            }
+        }
+      }
+       ?>
 </script>
 
 </body>
 </html>
+<?php
+    // var_dump($unvoted_comments_id);
+    // foreach($unvoted_comments_id as $comment)
+    // {
+    //   echo $comment->id ;
+    // }
+
+ ?>

@@ -40,7 +40,7 @@
 <!--        <button type='submit' class='btn btn-default'>Submit</button>-->
       </form>
       <?php
-            if(isset($id))
+            if(isset($user_id))
             {
                echo "
                     <ul class='navbar-left profile_icons'>

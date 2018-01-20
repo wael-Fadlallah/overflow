@@ -20,12 +20,12 @@ class Home extends CI_Controller
     {
         $this->load->helper('form');
         $this->load->library('form_validation');
-        $data = array(
+        $header_data = array(
             'user_id'    => $this->session->userdata('id'),
             'name'  => $this->session->userdata('name'),
             'pic'   => $this->session->userdata('pic')
         );
-        $this->load->view('header.php',$data);
+        $this->load->view('header.php',$header_data);
         if($questions = $this->User_model->get_questions())
         {
             $this->load->view('questions_tab.php',$questions);
@@ -55,9 +55,9 @@ class Home extends CI_Controller
         $this->form_validation->set_rules('tags','Tags','trim');
         if($this->form_validation->run())
         {
-            if($this->User_model->ask($data['id']))
+            if($insert_id = $this->User_model->ask($data['id']))
             {
-                echo 'Done';
+                redirect("/Home/display_question?id=$insert_id");
             }
         }
         $this->load->view('ask.php');
@@ -152,26 +152,28 @@ class Home extends CI_Controller
     }
     public function display_question()
     {
-        // $this->User_model->count_votes(28,-1);
-        $data = array(
-            'id'    => $this->session->userdata('id'),
+        // $this->User_model->count_votes(28,30,1) ;
+        $header_data = array(
+            'user_id'    => $this->session->userdata('id'),
             'name'  => $this->session->userdata('name'),
             'pic'   => $this->session->userdata('pic')
-         );
-        $this->load->view('header.php',$data);
+        );
+        $this->load->view('header.php',$header_data);
         if($data = $this->User_model->get_question($this->input->get('id')))
         {
-            echo "<pre>";
+           // echo "<pre>";
             // print_r($data);
 //            print($this->session->userdata('id'));
             // $data['votes'] = $this->get_votes($this->input->get('id'));
             // print_r($data);
-            echo "</pre>";
+            // echo "</pre>";
              $this->load->view('view_question.php',$data);
         }
         if($vote_data = $this->User_model->get_votes($this->input->get('id')))
         {
-          // var_dump($vote_data);
+          echo "<pre>";
+          var_dump($vote_data);
+          echo "</pre>";
           $this->load->view('footer.php',$vote_data);
         }
     }
@@ -188,15 +190,23 @@ class Home extends CI_Controller
     public function votes_query()
 
     {
+      // if isset $q_id its a comment vote query else its a question query
       $id   = $this->input->post('id');
       $up   = $this->input->post('up');
       $down = $this->input->post('down');
       $star = $this->input->post('star');
-      var_dump($up);
-      if($count = $this->User_model->votes_query($id,$up,$down,$star))
+      if($q_id = $this->input->post('q_id'))
       {
-        header("content-type:text/json");
-        echo json_encode($count) ;
+          if($vote_comment = $this->User_model->comment_votes_query($id,$q_id,$up,$down,$star))
+          {
+            return true ;
+          }
+      }else{
+          if($count = $this->User_model->votes_query($id,$up,$down,$star))
+          {
+            header("content-type:text/json");
+            echo json_encode($count) ;
+          }
       }
     }
 }
