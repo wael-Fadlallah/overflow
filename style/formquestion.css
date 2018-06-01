@@ -1,0 +1,6 @@
+.container_all{padding-top: 100px;background-color: whitesmoke}
+.box{padding-right: 10px;}
+#title,#content,#tags{width: 70%;}
+#content{height: 400px;}
+.label{margin-top: 10px;}
+#post{background-color:#4281a4; margin-top: 10px;}
