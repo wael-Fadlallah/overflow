@@ -46,7 +46,7 @@ class User_model extends CI_Model
     public function user_profile()
     {
       $id = $this->user_id;
-      $query = $this->db->query("SELECT * FROM users WHERE id = '$id'");
+      $query = $this->db->query("SELECT * FROM users WHERE id = '$id' ");
       $row = $query->row();
       $data = array(
           'name'      =>  $this->name,
@@ -59,41 +59,50 @@ class User_model extends CI_Model
           'profile'   =>  $row->profile_pic
       );
       $q_query = $this->db->query("SELECT title , id FROM questions WHERE owner = '$id'");
+      $count_data = array();
       if($row = $q_query->result())
       {
         foreach ($row as $q) {
-          $count_query = $this->db->query(" SELECT COUNT(id) as count FROM comments WHERE question_id = '$q->id' ");
+          $count_query = $this->db->query(" SELECT COUNT(id) as comments FROM comments WHERE question_id = '$q->id' ");
           $votes_query = $this->db->query(" SELECT COUNT(id) as votes FROM votes WHERE question_id = '$q->id' AND comment_id IS NULL ");
-          $votes_row   = $votes_query->row();
-          // var_dump($votes_row);
-          if($count_row = $count_query->row())
+          if($count_row = $count_query->row() AND $votes_row   = $votes_query->row())
           {
-              $count_data = array(
-                $q->title       => array(
-                  'count' => $count_row->count,
+              $data['user_questions'][$q->title] = array(
+                  'comments' => $count_row->comments,
                   'votes' => $votes_row->votes
-                )
               );
-              // var_dump($count_data);
-              $data['user_questions'] = $count_data;
           }
         }
       }else{
         $data['user_questions'] = false;
       }
+      $user_tags = $this->db->query("SELECT tags FROM questions WHERE owner = $id");
+      $tags_list = array();
+      if($tags_array = $user_tags->result_array())
+      {
+        foreach($tags_array as $tags_sting )
+        {
+          $tags = explode(',',$tags_sting['tags']);
+          foreach($tags as $tag)
+          {
+            array_push($tags_list,$tag);
+          }
+        }
+      $data['tags_counters'] = array_count_values($tags_list);
+      }
       return $data;
     }
     public function insert_img($image = null , $id = null)
     {
-        $query = "UPDATE `users` SET profile_pic = ".$this->db->escape($image)." WHERE id = ".$this->db->escape($id). " ";
-        $this->db->query($query);
-    }
-    public function check_profile($id)
-    {
-        $query = "SELECT profile_pic FROM `users` WHERE id = ".$this->db->escape($id)." ";
-        $row = $this->db->query($query);
-        $result = $row->last_row('array');
-        return $result['profile_pic'] ;
+        $sql = "UPDATE `users` SET profile_pic = ".$this->db->escape($image)." WHERE id = ".$this->db->escape($id). " ";
+        // $query = $this->db->query($sql);
+        if($this->db->simple_query($sql))
+        {
+          // return $this->db->escape($image) ;
+          return $image ;
+        }else{
+          return FALSE;
+        }
     }
     public function complate_account($id)
     {
@@ -106,7 +115,10 @@ class User_model extends CI_Model
             'career'=> $career
         );
         $this->db->where('id',$id);
-        $this->db->update('users',$data);
+        if($this->db->update('users',$data))
+        {
+          return true ;
+        }
     }
     public function ask($id){
         $data = array(
@@ -241,22 +253,23 @@ class User_model extends CI_Model
       }
     public function get_questions()
     {
-        $query = $this->db->query("SELECT questions.id , questions.title , questions.post , questions.tags , questions.date , users.name , questions.owner , questions.votes FROM questions INNER JOIN users WHERE questions.owner = users.id ");
+        $query = $this->db->query("SELECT questions.id , questions.title , questions.post , questions.tags , questions.date , users.name , users.profile_pic , questions.owner , questions.votes FROM questions INNER JOIN users WHERE questions.owner = users.id ");
         foreach($query->result() as $obj)
         {
-//            $tags = explode(',',$obj->tags);
-            // $data['question'][] = $obj;
+           $count_query = $this->db->query(" SELECT COUNT(id) as comments FROM comments WHERE question_id = '$obj->id' ",false,true);
+           $votes_query = $this->db->query(" SELECT COUNT(id) as votes FROM votes WHERE question_id = '$obj->id' AND comment_id IS NULL ",false,true);
            $data['question'][] = array(
-           'id'      => $obj->id,
-           'title'   => $obj->title,
-           "post"    => $obj->post,
-           "tags"    => $obj->tags,
-           "owner"   => $obj->name,
-           "date"    => $this->arabic_date_format(strtotime($obj->date)),
-           "votes"   => $obj->votes,
-           "comments"=> $this->num_comments($obj->id)
+           'id'           => $obj->id,
+           'title'        => $obj->title,
+           "post"         => $obj->post,
+           "tags"         => $obj->tags,
+           "owner"        => $obj->name,
+           "date"         => $this->arabic_date_format(strtotime($obj->date)),
+           "votes"        => $votes_query->row()->votes,
+           "comments"     => $count_query->row()->comments,
+
+           "profile_pic"  => $obj->profile_pic
            );
-           // var_dump($this->num_comments($obj->id));
         }
         return $data ;
     }
@@ -395,49 +408,12 @@ class User_model extends CI_Model
     {
         if($c_id == false)
         {
-          $query = $this->db->query("SELECT COUNT(id) as count FROM votes WHERE upvote = 'true' OR upvote = '1' AND question_id='$q_id' AND comment_id IS NULL");
+          $query = $this->db->query("SELECT COUNT(id) as count FROM votes WHERE question_id='$q_id' AND comment_id IS NULL AND upvote = 'true' OR upvote = '1' ");
           if($row = $query->row())
           {
             return $row->count ;
           }
         }
-    }
-    public function count_votes($q_id,$c_id=false,$count=false)
-    {
-      if($count == false)
-      {
-        $query = $this->db->query("SELECT votes FROM questions WHERE id = '$q_id'");
-        $row = $query->row();
-        return $row->votes;
-      }elseif($c_id != false){
-        $query = $this->db->query("SELECT votes FROM comments WHERE id = '$c_id'");
-        if($row = $query->row())
-        {
-          $vote = $row->votes + $count ;
-          $this->db->set('votes',$vote,FALSE);
-          $this->db->where('id',$c_id);
-          $this->db->update('comments');
-        }
-      }else {
-        $query = $this->db->query("SELECT votes FROM questions WHERE id = '$q_id'");
-        $row_increment = $query->row();
-        if($row_increment != null )
-        {
-          // var_dump($row);
-          // echo 'orignal is '.$row_increment->votes ;
-          $vote = $row_increment->votes + $count;
-          // echo '<br>vote is '.$vote ;
-          // $this->db->query("UPDATE `questions` SET `votes` = `votes` WHERE id = '$q_id' ");
-          $this->db->set('votes',$vote,FALSE);
-          $this->db->where('id',$q_id);
-          $this->db->update('questions');
-          // echo 'count is '.$count;
-          // echo '<br> votes is '.$row->votes;
-          // echo '<br> still is '.$vote;
-          return $vote ;
-        }
-      }
-      //
     }
     public function get_votes($q_id)
     {

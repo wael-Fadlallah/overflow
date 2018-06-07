@@ -46,7 +46,9 @@ class Home extends CI_Controller
       $this->load->view('header.php');
       if($data = $this->User_model->user_profile())
       {
+        // echo "<pre>";
         // var_dump($data);
+        // echo "</pre>";
         $this->load->view('profile.php',$data);
       }
     }
@@ -108,6 +110,10 @@ class Home extends CI_Controller
     }
     public function complate_account($error = null)
     {
+      // if($this->User_model->insert_img('Breaking_bad_chemistry_1920x12001.jpg',10))
+      // {
+      //     echo "<h1>okay</h1>";
+      // }
         $this->load->library('form_validation');
         $this->load->view('header.php');
         $data = $this->session->all_userdata();
@@ -117,10 +123,14 @@ class Home extends CI_Controller
         $this->form_validation->set_rules('age','Age','trim|max_length[3]');
         if($this->form_validation->run())
         {
-            $this->User_model->complate_account($data['id']);
+            if($this->User_model->complate_account($data['id']))
+            {
+              redirect("Home/");
+            }
         }
         $this->load->view('complate_account.php',$data);
         $this->load->view('footer.php');
+        // var_dump($this->User_model->insert_img('Breaking_bad_chemistry_1920x12001.jpg',11));
     }
     public function insert_image(){
         $this->load->library('form_validation');
@@ -133,14 +143,19 @@ class Home extends CI_Controller
         {
             $error = array('error'=>$this->upload->display_errors()) ;
             header('content-type:text/json');
-            echo json_encode($error);
+            echo json_encode('error');
 //            $this->load->view('complate_account.php',$error);
         }else{
             $image_name = $this->upload->data('file_name');
+            $image_type = $this->upload->data('file_ext');
             $user_id = $this->session->userdata('id');
-            if($this->User_model->insert_img($image_name,$user_id))
+            if($name = $this->User_model->insert_img($image_name,$user_id))
             {
-                header('location:complate_account');
+                header('content-type:text/json');
+                echo json_encode($name);
+            }else{
+                header('content-type:text/json');
+                echo json_encode("database error : try again later : $image_name | $user_id");
             }
         }
 //        $this->complate_account();
@@ -163,21 +178,9 @@ class Home extends CI_Controller
     }
     public function display_question()
     {
-        // $this->User_model->count_votes(28,30,1) ;
-        // $header_data = array(
-        //     'user_id'    => $this->session->userdata('id'),
-        //     'name'  => $this->session->userdata('name'),
-        //     'pic'   => $this->session->userdata('pic')
-        // );
         $this->load->view('header.php');
         if($data = $this->User_model->get_question($this->input->get('id')))
         {
-           // echo "<pre>";
-            // print_r($data);
-//            print($this->session->userdata('id'));
-            // $data['votes'] = $this->get_votes($this->input->get('id'));
-            // print_r($data);
-            // echo "</pre>";
              $this->load->view('view_question.php',$data);
         }
         if($vote_data = $this->User_model->get_votes($this->input->get('id')))

@@ -185,7 +185,7 @@ $('.tags_input').tokenize2({
           }else{
              $comment_voted = false ;
           }
-          if(isset($unvoted_comments_id))
+          if(isset($unvoted_comments_id) and $unvoted_comments_id != false)
           {
             foreach($unvoted_comments_id as $comment)
             {
@@ -209,6 +209,7 @@ $('.tags_input').tokenize2({
 <!-- complate account ajax function -->
 <script>
   $(document).ready(function(e){
+    var profile_img = $(".profile-img img");
     $('#profile_selecter').on('click',function(){
       $("#profile_image").click();
     });
@@ -226,9 +227,13 @@ $('.tags_input').tokenize2({
           contentType:false,
           cache:false,
           processData:false,
-          success:function(data){
-            console.log("it works"+data.error);
+          success:function(img){
+            var url = '<?php echo base_url("images/profiles/") ; ?>';
+            profile_img.attr('src',url+img);
           }
+        })
+        .fail(function(){
+          console.log('fail');
         })
       // });
     });

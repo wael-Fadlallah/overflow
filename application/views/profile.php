@@ -5,7 +5,7 @@
            <div class="col-lg-6 right">
                <div class="username"><?php echo $name ?></div>
                <div class="user_job"><?php echo $career ?></div>
-               <img class="profile_image" src="<?php echo base_url('images/profiles/default/man.png'); ?>">
+               <img class="profile_image" src="<?php echo base_url('images/profiles/').$profile; ?>">
                <div class="about_user"><?php echo $bio ?></div>
                <div class="edit_image"><button class="btn">تعديل</button></div>
            </div>
@@ -20,22 +20,28 @@
        </div>
        <div id="user_profile_tags">
            <h3>اقسام مستعلمة بواسطة محمد:</h3>
-           <div class="tag_box">
+           <?php
+           if(isset($tags_counters) and $tags_counters != false)
+           {
+             foreach($tags_counters as $tag => $count)
+             {
+               echo "
+               <div class='tag_box'>
+                   <a href='#' class='tag'>$tag</a><span class='tag_counter'>$count</span><span>مشاركة</span>
+               </div>
+               ";
+             }
+           }
+
+           ?>
+           <!-- <div class="tag_box">
                <a href="#" class="tag">C#</a><span class="tag_counter">189</span><span>مشاركة</span>
-           </div>
-           <div class="tag_box">
-               <a href="#" class="tag">PHP</a><span class="tag_counter">18</span><span>مشاركة</span>
-           </div>
-           <div class="tag_box">
-               <a href="#" class="tag">CSS</a><span class="tag_counter">60</span><span>مشاركة</span>
-           </div>
-           <div class="tag_box">
-               <a href="#" class="tag">Perl</a><span class="tag_counter">39</span><span>مشاركة</span>
-           </div>
+           </div> -->
+
        </div>
        <h3 class="text-center rtl label">سئل بواسطة محمد:</h3>
          <?php
-              if(isset($user_questions))
+              if(isset($user_questions) and $user_questions != false)
               {
                 // var_dump($user_questions);
                 foreach ($user_questions as $title => $node) {
@@ -47,7 +53,7 @@
                               <div class='col-lg-4 answers'>
                               <i class='answer_icon fa fa-check'></i>
                               <span class='answer_conuter'>
-                              ".$node['count']."
+                              ".$node['comments']."
                               </span>
                               </div>
                              <div class='col-lg-4 votes'>
@@ -70,6 +76,13 @@
 
                   ";
                 }
+              }else{
+                echo "
+                  <div class='row'>
+                  <p>لا توجد اسئلة<p>
+
+                  </div>
+                ";
               }
          ?>
        </div>

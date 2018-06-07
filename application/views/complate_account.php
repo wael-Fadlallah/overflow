@@ -45,14 +45,8 @@ if(isset($error))
                     </div>
                     <div class="col-md-4">
                        <div class="profile-img">
-<!--                           <img src="<?php   echo base_url('images/profile.png');    ?>" alt="profile">-->
                           <?php
-                           if(isset($profile))
-                           {
-                                echo "<img src= ". base_url("images/profiles/default/$profile") . " alt='profile'>";
-                           }else{
                                echo "<img src= ". base_url("images/profiles/default/man.png") . " alt='profile'>";
-                           }
                            ?>
                            <form method="post" action="#" id="insert_profile" enctype="multipart/form-data">
                                <input type="file" class="profile" id="profile_image" name='userPic'>

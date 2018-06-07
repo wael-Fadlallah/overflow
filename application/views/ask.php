@@ -30,29 +30,22 @@
 //            <a href='".base_url('Home/ask/?status="ask"')."'><button class='btn btn-danger'>متابعة</button>
 //        </div>
 //    </div>
-//</section>
+// </section>
 //        ";
 //    }else{
 //
 //    }
 ?>
-<!--
-<script>
-      tinymce.init({
-        selector: '#text',
-        toolbar: 'undo redo | styleselect | bold italic | link image',
-      });
-</script>
--->
+
 <?php
-    if(isset($_POST['send']))
-    {
-        echo '<pre>';
-        echo $_POST['title'];
-        echo $_POST['post'];
-        echo implode(',',$_POST['tags']);
-        echo '</pre>';
-    }
+    // if(isset($_POST['send']))
+    // {
+    //     echo '<pre>';
+    //     echo $_POST['title'];
+    //     echo $_POST['post'];
+    //     echo implode(',',$_POST['tags']);
+    //     echo '</pre>';
+    // }
 ?>
 
 <section class="ask_question">

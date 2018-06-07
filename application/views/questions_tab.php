@@ -34,7 +34,9 @@ if(isset($vister))
                 <div class='col-lg-4 votes'>
                     <i class='vote_icon_up fa fa-angle-up'></i>
                     <i class='vote_icon_down fa fa-angle-down'></i>
-                    <span class='vote_counter'>30</span>
+                    <span class='vote_counter'>
+                      ". $q['votes'] ."
+                    </span>
                     </div>
                     <div class='col-lg-4 views'>
                     <i class='view_icon fa fa-eye'></i>
@@ -42,7 +44,9 @@ if(isset($vister))
                     </div>
                     <div class='col-lg-4 answers'>
                     <i class='answer_icon fa fa-check'></i>
-                    <span class='answer_counter'>220</span>
+                    <span class='answer_counter'>
+                      ". $q['comments'] ."
+                    </span>
                 </div>
             </div>
         </div>
@@ -70,7 +74,7 @@ if(isset($vister))
                     <div class='col-lg-3 asker_info'>
                         <div class='asker_time'> ".$q['date']." </div>
                         <div>
-                        <img src=' ".base_url('images/wael.jpg') ."' class='asker_image'></div>
+                        <img src=' ".base_url('images/profiles/').$q['profile_pic']."' class='asker_image'></div>
                         <div class='asker'> ".$q['owner']." </div>
                         <div class='points'>
                             <i class='point_icon fa fa-circle' id='points'></i>

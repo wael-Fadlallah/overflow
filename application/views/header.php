@@ -63,6 +63,7 @@
                       <a href='#'><span class='glyphicon glyphicon-inbox'>  </span></a>
                     </li>
                     ";
+                    echo "<li>".$this->session->userdata('id')."</li>";
                   }
                ?>
            </ul>
